@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Roller</title>
+		<script src="world.js"> </script>
+		<script src="ball.js"> </script>
+		<script src="line.js"> </script>
+	</head>
+
+	<body>
+		<div id="score" style="position: absolute; right: 0; ">Score: 0</div>
+		<canvas id="canvas" style="border:1px solid #000000;" >Your browser does not support the HTML5 canvas tag.</canvas> 
+	
+		<script>
+			/* Returns a value from 0 to max-1 */
+
+			function Random(max){
+				return Math.floor(Math.random()*max);
+			}
+			
+			var canvas=document.getElementById("canvas");
+			canvas.width = window.innerWidth;
+			canvas.height = window.innerHeight;
+			var ctx=canvas.getContext("2d");
+			
+			window.requestAnimFrame = (function(callback) {
+				return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
+				function(callback) {
+						window.setTimeout(callback, 1000 / 60);
+				};
+			})();
+
+			var world = new World(canvas, ctx);
+
+			function isMobile() { 
+				if( navigator.userAgent.match(/Android/i)
+					|| navigator.userAgent.match(/webOS/i)
+					|| navigator.userAgent.match(/iPhone/i)
+					|| navigator.userAgent.match(/iPad/i)
+					|| navigator.userAgent.match(/iPod/i)
+					|| navigator.userAgent.match(/BlackBerry/i)
+					|| navigator.userAgent.match(/Windows Phone/i)
+				){
+					return true;
+				}
+				else {
+					return false;
+				}
+			}
+						
+			if (isMobile()) {
+				window.ondevicemotion = function(event) {
+					world.directionMovePlayer(event.accelerationIncludingGravity.z, event.accelerationIncludingGravity.x);
+				}	
+			}
+			else {			
+				canvas.addEventListener('mousemove', function(evt) {
+					world.movePlayerTo(evt.clientX, evt.clientY);
+				}, false);
+			}
+			world.draw();
+			
+		</script> 
+		
+		 
+	</body>
+</html>
